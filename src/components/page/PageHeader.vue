@@ -1,6 +1,6 @@
 <script lang="ts">
 import type { PropType } from 'vue'
-import type * as types from '../../types';
+import type * as types from '@/types';
 
 export default {
   name: 'PageHeader',

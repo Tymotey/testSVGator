@@ -9,3 +9,16 @@
     grid-template-columns: $columns;
   }
 }
+
+@mixin wrapper-grid-rows($columns: 1fr, $gap: 2rem) {
+  display: grid;
+  gap: $gap;
+  grid-template-rows: $columns;
+  grid-auto-flow: column;
+}
+
+@mixin wrapper-responsive-rows($columns: 2fr 3fr) {
+  @media (min-width: $query-tablet) {
+    grid-template-rows: $columns;
+  }
+}

@@ -1,6 +1,6 @@
 export type StepsData = {
-    originalFile?: object,
-    animations?: String
-    newFile?: object
-    result?: object
+    originalFile?: String
+    animationData?: String
+    newFile?: String
+    result?: String
 }

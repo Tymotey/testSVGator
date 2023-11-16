@@ -8,10 +8,10 @@ import Step4Component from '../steps/Step4Component.vue'
 
 const activeStep = ref<any>(1)
 const stepsData = reactive({
-    originalFile: {},
-    animations: '',
-    newFile: {},
-    result: {}
+    originalFile: '',
+    animationData: '',
+    newFile: '',
+    result: ''
 } as types.StepsData)
 
 export default {
@@ -26,15 +26,21 @@ export default {
         stepsData: stepsData,
     }),
     methods: {
-        changeStep(newStep: Number) {
+        changeStep(newStep: Number) { // I can add them in "context"(provide) but for learning sake I left them as parameters to components
             let changeStep = true as boolean
-            if (newStep == 1) {
+            if (this.activeStep !== 1 && newStep == 1) {
                 changeStep = confirm('Do you want to start over?')
             }
 
             if (changeStep) {
                 if (newStep == 1) {
-                    // TODO: reset progress
+                    this.stepsData = {
+                        originalFile: '',
+                        animationData: '',
+                        newFile: '',
+                        result: ''
+                    }
+                    // TODO: remove file upload field value
                 }
 
                 this.activeStep = newStep
@@ -43,7 +49,7 @@ export default {
     },
     provide() {
         return {
-            stepsData: computed(() => this.stepsData)
+            stepsData: computed(() => this.stepsData as types.StepsData)
         }
     }
 }
@@ -59,7 +65,9 @@ export default {
 </template>
 
 <style scoped lang="scss">
-main {}
+main {
+    @include wrapper-grid(1fr 1fr);
+}
 
 #result-wrapper {}
 </style>

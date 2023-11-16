@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type * as types from './types';
+import type * as types from '@/types';
 import { reactive } from 'vue';
 import PageHeader from './components/page/PageHeader.vue'
 import PageMain from './components/page/PageMain.vue'
