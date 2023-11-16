@@ -1,0 +1,11 @@
+@mixin wrapper-grid($columns: 1fr, $gap: 2rem) {
+  display: grid;
+  gap: $gap;
+  grid-template-columns: $columns;
+}
+
+@mixin wrapper-responsive($columns: 2fr 3fr) {
+  @media (min-width: $query-tablet) {
+    grid-template-columns: $columns;
+  }
+}

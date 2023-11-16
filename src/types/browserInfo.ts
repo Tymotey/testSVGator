@@ -1,0 +1,1 @@
+export type BrowserInfoType = { online: boolean }
