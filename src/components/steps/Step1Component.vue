@@ -1,14 +1,14 @@
 <script lang="ts">
-import { returnStepClasses, readText } from '../functions'
+import { returnStepClasses, readText, extractSVGAnimation } from '../functions'
 import NumberComponent from '../NumberComponent.vue'
 import UploadComponent from '../UploadComponent.vue'
-import type * as types from '../../types';
+import type * as types from '../../types'
 
 export default {
     name: 'Step1Component',
     data() {
         return {
-            currentStep: 1,
+            thisStep: 1,
             returnStepClasses: returnStepClasses
         };
     },
@@ -28,13 +28,11 @@ export default {
             }
             else {
                 let contentFile = await readText(returnData.files[0])
-                // TODO: inject use type of object
+                // TODO: inject to use type of object
                 this.stepsData.originalFile = contentFile
-                this.stepsData.animationData = `aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
-                aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa`
-
+                this.stepsData.animationData = extractSVGAnimation(contentFile)
                 this.$emit('changeStep', 2)
-                this.$emit('changeStep', 3)
+
                 this.$toast.success('File uploaded')
             }
         }
@@ -43,15 +41,20 @@ export default {
         NumberComponent,
         UploadComponent
     },
-    inject: ['stepsData']
+    inject: ['stepsData', 'browserInfo']
 }
+// TODO: drop icon
 </script>
 
 <template>
-    <div class="step" :class="returnStepClasses(currentStep, activeStep)">
-        <NumberComponent :number="'1'" :textUnder="'Upload an animated SVG'"
-            @click="(event: Event) => { $emit('changeStep', currentStep) }" />
-        <UploadComponent @afterFileUpload="afterFileUpload" :allowedExtension="'svg'" />
+    <div class="step" :class="returnStepClasses(thisStep, activeStep, this.browserInfo.isMobile)">
+        <div class="step-title">
+            <NumberComponent :number="'1'" :textUnder="'Upload an animated SVG'"
+                @click="(event: Event) => { $emit('changeStep', thisStep) }" />
+        </div>
+        <div class="step-content">
+            <UploadComponent @afterFileUpload="afterFileUpload" :allowedExtension="'svg'" />
+        </div>
     </div>
 </template>
 

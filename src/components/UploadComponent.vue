@@ -2,7 +2,7 @@
 <script lang="ts">
 import axios from 'axios'
 import type * as types from '@/types'
-import { fileExtensionsToMime } from '@/components/functions'
+import { fileExtensionsToMime } from '@/components/functions/index.js'
 
 export default {
     name: 'UploadComponent',

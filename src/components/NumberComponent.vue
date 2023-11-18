@@ -21,8 +21,10 @@ export default {
 
 <style scoped lang="scss">
 .number-wrapper {
+    flex-grow: 0;
     @include wrapper-grid(1fr, 0px);
-    margin: 1em auto;
+    margin: 0px auto;
+    padding: 10px 0px;
     text-align: center;
 
     .textUnder {}

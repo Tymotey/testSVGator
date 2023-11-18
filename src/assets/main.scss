@@ -40,43 +40,106 @@ h6 {
 }
 
 .step {
-  margin-bottom: 1em;
+  display: flex;
+  flex-direction: column;
+  width: calc(100% - 2em);
+  margin-right: 1em;
+  margin-left: 1em;
+  min-height: 100%;
+
+  @media (min-width: $query-width-tablet) {
+    width: calc(50% - 2em);
+  }
 
   &:last-of-type {
-    margin-bottom: 0px;
+  }
+
+  &.step-past,
+  &.step-disabled {
+    opacity: 0;
+    padding: 0px;
+    width: 0;
+    margin: 0px;
   }
 
   &.step-past {
-    opacity: 0.8;
-
     &:hover {
-      opacity: 1;
     }
   }
 
   &.step-disabled {
-    opacity: 0.4;
+  }
+
+  .step-title {
+    flex-grow: 0;
+  }
+  .step-content {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    padding: 1em;
+
+    @media all and (min-height: $query-height-small) {
+      justify-content: center;
+    }
+  }
+}
+
+html,
+body,
+#app,
+#pageWrapper {
+  height: 100%;
+  width: 100%;
+}
+
+#app {
+  display: flex;
+}
+
+body,
+main {
+  &::-webkit-scrollbar {
+    width: 6px;
+  }
+  &::-webkit-scrollbar-track {
+    background-color: #e4e4e4;
+    border-radius: 100px;
+  }
+  &::-webkit-scrollbar-thumb {
+    background-color: $theme-pallete-main;
+    border-radius: 100px;
   }
 }
 
 .json-container {
-  width: 50%;
+  width: 80%;
   max-width: 500px;
   margin: 0px auto;
   border: 1px solid #000000;
   border-radius: 10px;
   padding: 10px;
   overflow: hidden;
-  max-height: 100px;
+  height: 150px;
   word-break: break-all;
 
-  &.full-height {
-    max-height: none;
+  @media all and (min-height: $query-height-small) {
+    height: 100px;
   }
 }
 
 .svg-preview {
   text-align: center;
+  margin: 10px auto 0px;
+
+  .preview-iframe {
+    border: 0px;
+    overflow: visible;
+    width: 300px;
+    height: 300px;
+  }
 
   & > * {
     width: 100%;
@@ -84,7 +147,7 @@ h6 {
   }
 
   .preview {
-    width: 50%;
+    width: 75%;
     max-width: 300px;
     margin: 0px auto;
   }

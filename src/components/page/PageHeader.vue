@@ -1,19 +1,13 @@
 <script lang="ts">
-import type { PropType } from 'vue'
-import type * as types from '@/types';
 
 export default {
   name: 'PageHeader',
-  props: {
-    browserInfo: {
-      type: Object as PropType<types.BrowserInfoType>
-    }
-  }
+  inject: ['browserInfo']
 }
 </script>
 
 <template>
-  <div v-show="!browserInfo?.online || false" id="offline-warning">Device is offline</div>
+  <div v-show="!this.browserInfo?.online || false" id="offline-warning">Device is offline</div>
   <header>
     <img class="logo" src="https://cdn.svgator.com/images/2019/10/1200x1200-symbol---background.png" title="SVGator" />
   </header>
@@ -21,14 +15,20 @@ export default {
 
 <style scoped lang="scss">
 #offline-warning {
+  position: absolute;
+  left: 0px;
+  width: 100%;
   background-color: red;
   color: #FFFFFF;
   text-align: center;
 }
 
 header {
-  text-align: center;
-  margin: 10px auto 30px;
+  margin: 0px auto;
+  padding: 10px;
+  flex-grow: 0;
+  width: 100%;
+  background-color: $theme-pallete-main;
 
   .logo {
     width: 50px;

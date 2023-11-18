@@ -1,40 +1,53 @@
-<script setup lang="ts">
-import type * as types from '@/types';
-import { reactive } from 'vue';
-import PageHeader from './components/page/PageHeader.vue'
-import PageMain from './components/page/PageMain.vue'
+<script lang="ts">
+import { computed, reactive } from 'vue'
+import type * as types from '@/types'
 
 const browserInfo = reactive({
   online: true,
+  isMobile: window.innerWidth < 600 ? true : false,
 } as types.BrowserInfoType)
 
-window.addEventListener("offline", (e) => {
+window.addEventListener("offline", () => {
   browserInfo.online = false
 })
 
-window.addEventListener("online", (e) => {
+window.addEventListener("online", () => {
   browserInfo.online = true
 })
+
+// TODO: resize listener!
+
+export default {
+  data: () => ({
+    browserInfo: browserInfo,
+  }),
+  provide() {
+    return {
+      // TODO: add type
+      browserInfo: computed(() => this.browserInfo as types.BrowserInfoType)
+    }
+  }
+}
+</script>
+
+<script setup lang="ts">
+import PageHeader from './components/page/PageHeader.vue'
+import PageMain from './components/page/PageMain.vue'
 </script>
 
 <template>
   <div id="pageWrapper">
-    <PageHeader :browserInfo="browserInfo" />
+    <PageHeader />
     <PageMain />
   </div>
 </template>
 
 <style scoped lang="scss">
 #pageWrapper {
-  width: 95%;
+  width: 100%;
   margin: 0px auto;
-
-  @media all and (min-width: $query-tablet) {
-    width: 95%;
-  }
-
-  &>* {
-    width: 100%;
-  }
+  display: flex;
+  flex-direction: column;
+  flex-wrap: nowrap;
 }
 </style>

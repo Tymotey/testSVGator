@@ -3,6 +3,7 @@
 import { returnStepClasses, readText } from '../functions'
 import NumberComponent from '../NumberComponent.vue'
 import UploadComponent from '../UploadComponent.vue'
+import type * as types from '../../types'
 
 export default {
     name: 'ApplyComponent',
@@ -12,7 +13,9 @@ export default {
     },
     data() {
         return {
-            currentStep: 3,
+            // not best solution to resize preview but with JS onload I had same origin cors error
+            previewPreCode: '<style>svg{ width: 100%; height: auto; max-width: 300px; max-height: 300px; }</style>',
+            thisStep: 3,
             returnStepClasses: returnStepClasses,
         };
     },
@@ -41,21 +44,29 @@ export default {
             default: 1
         }
     },
-    inject: ['stepsData']
+    inject: ['stepsData', 'browserInfo']
 }
 </script>
 
 <template>
-    <div class="step" :class="returnStepClasses(currentStep, activeStep)">
-        <NumberComponent :number="'3'" :textUnder="'Upload new SVG to apply animation'" />
-        <UploadComponent @afterFileUpload="afterFileUpload" :allowedExtension="'svg'" />
-        <div id="result-wrapper">
-            <div class="svg-preview">
-                <div class="preview" v-show="this.stepsData.newFile !== ''" v-html="this.stepsData.newFile"></div>
-            </div>
+    <div class="step" :class="returnStepClasses(thisStep, activeStep, this.browserInfo.isMobile)">
+        <div class="step-title">
+            <NumberComponent :number="'3'" :textUnder="'Upload new SVG to apply animation'" />
         </div>
-        <button class="apply-button" v-show="this.stepsData.newFile !== ''" @click="() => { applyAnimation() }"
-            title="Apply animation to new file">Apply!</button>
+        <div class="step-content">
+            <UploadComponent @afterFileUpload="afterFileUpload" :allowedExtension="'svg'" />
+            <div id="result-wrapper">
+                <div class="svg-preview">
+                    <div class="preview" v-show="this.stepsData.newFile !== ''">
+                        <!-- USE IFRAME to disable id styles from this SVG being applied to other previews -->
+                        <iframe class="preview-iframe" :srcdoc="previewPreCode + this.stepsData.newFile"
+                            sandbox=""></iframe>
+                    </div>
+                </div>
+            </div>
+            <button class="apply-button" v-show="this.stepsData.newFile !== ''" @click="() => { applyAnimation() }"
+                title="Apply animation to new file">Apply animation!</button>
+        </div>
     </div>
 </template>
 

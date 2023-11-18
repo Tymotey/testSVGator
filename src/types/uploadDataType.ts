@@ -1,5 +1,5 @@
 export type UploadDataType = {
-    error: Boolean,
-    message: String | null,
+    error: boolean,
+    message: string | null,
     files: File[]
 }
