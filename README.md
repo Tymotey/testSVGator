@@ -4,6 +4,9 @@ How to test:
 
 `npm run dev`
 
-[Link for local test](http://localhost:5173/)
+[Link for local test](http://localhost:3000/)
 
-Folder: `test_files` contains files for test
+Folder: `test_files` contains files I used for testing
+
+For Start:
+`npm install -g win-node-env`

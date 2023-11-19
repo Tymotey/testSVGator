@@ -14,7 +14,7 @@ export default {
         };
     },
     methods: {
-        clickDummyBrowse(e: Event) {
+        clickDummyBrowse() {
             this.$refs.uploaderFileInput.click()
         },
         onChangeEvent(uploadFiles: File) {
@@ -47,7 +47,7 @@ export default {
                     this.$refs.uploaderFileInput.value = ''
 
                     uploadedFilesAsArray.forEach(async (file) => {
-                        axios.post("http://127.0.0.1:5173/upload", {
+                        axios.post("http://localhost:3000/api/v1/upload", {
                             step: this.step,
                             file: file,
                             requestId: sessionStorage.getItem(svgRequestId)
@@ -122,17 +122,19 @@ export default {
     },
     inject: ['stepsData']
 }
+// TODO: sa dispara progress
+// TODO: uplaod server check
 </script>
 
 <template>
     <div class="uploader-wrapper" ref="uploaderWrapper" @dragenter="(e) => { dragEnter(e) }"
         @dragleave="(e) => { dragleave(e) }" @dragover="(e) => { dragover(e) }" @drop="(e) => { dragdrop(e) }">
-        <img class="upload_icon" src="/images/upload.svg" title="Upload SVG" @click="(e) => { clickDummyBrowse(e) }" />
+        <img class="upload_icon" src="/src/assets/upload.svg" title="Upload SVG" @click="(e) => { clickDummyBrowse() }" />
         <div class="uploader">
             <input type="file" @change="(e) => { onChangeEvent(e?.target?.files) }" :disabled="isUploading"
                 ref="uploaderFileInput" v-show="false" />
-            <input type="button" value="Browse..." @click="(e) => { clickDummyBrowse(e) }" />
-            <div v-if="progress" id="progress-bar-wrapper">
+            <input type="button" class="button-browse" value="Browse..." @click="(e) => { clickDummyBrowse() }" />
+            <div v-if="progress" class="progress-bar-wrapper">
                 <div class="progess-bar" :style="{ 'width': progress !== true ? progress : '0px' }"> {{ progress }}
                 </div>
             </div>
@@ -154,6 +156,7 @@ export default {
     .upload_icon {
         width: 100px;
         margin: 0px auto 20px;
+        cursor: pointer;
 
         &:hover {
             @include filter-upload-hover-style();
@@ -173,8 +176,22 @@ export default {
         margin: 10px auto;
 
         .progess-bar {
+            color: #FFFFFF;
             text-align: left;
             background-color: green;
+        }
+    }
+
+    .button-browse {
+        appearance: unset;
+        border: 0px;
+        padding: 10px;
+        cursor: pointer;
+        background-color: $theme-pallete-main;
+        color: #FFFFFF;
+
+        &:hover {
+            background-color: $theme-pallete-secondary;
         }
     }
 }

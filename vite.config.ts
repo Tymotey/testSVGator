@@ -15,8 +15,14 @@ export default defineConfig({
   css: {
     preprocessorOptions: {
       scss: {
-        additionalData: `@import "./src/assets/style/variables"; @import "./src/assets/style/mixins";`
+        additionalData: `@import "./src/style/variables"; @import "./src/style/mixins";`
       }
+    }
+  },
+  build: {
+    manifest: true,
+    rollupOptions: {
+      input: './src/main.ts'
     }
   }
 })

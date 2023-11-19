@@ -53,7 +53,7 @@ export default {
                 <div v-show="this.stepsData.animationData !== undefined">
                     <span class="label-save">
                         <span>Animation data</span>
-                        <img class="save_icon" src="/images/save.svg"
+                        <img class="save_icon" src="/src/assets/save.svg"
                             @click="() => { downloadOnTheFly(JSON.stringify(this.stepsData.animationData)) }"
                             title="Save animation to JSON" />
                     </span>
