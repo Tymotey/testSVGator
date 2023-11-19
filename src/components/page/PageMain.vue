@@ -28,8 +28,8 @@ export default {
         stepsData: stepsData,
     }),
     methods: {
-        changeStep(newStep: Number, resetOnly: boolean = false) { // I can add them in "context"(provide) but for learning sake I left them as parameters to components
-            // TODO: get rid of alert if step 2 on desktop
+        changeStep(newStep: Number, resetOnly: boolean = false) {
+            // I can add them in "context"(provide) but for learning sake I left them as parameters to components
             const resetValue = {
                 originalFile: '',
                 animationData: undefined,
@@ -43,16 +43,8 @@ export default {
             }
             else {
                 let canChangeStep = true as boolean
-                if (this.activeStep !== 1 && newStep == 1) {
-                    canChangeStep = confirm('Do you want to start over?')
-                }
 
                 if (canChangeStep) {
-                    if (newStep == 1) {
-                        this.stepsData = resetValue
-                        // TODO: remove file upload input value
-                    }
-
                     this.activeStep = newStep
                 }
             }
@@ -60,7 +52,6 @@ export default {
     },
     provide() {
         return {
-            // TODO: add type
             stepsData: computed(() => this.stepsData as types.StepsData)
         }
     }
@@ -77,13 +68,4 @@ export default {
     </main>
 </template>
 
-<style scoped lang="scss">
-main {
-    display: flex;
-    flex-wrap: wrap;
-    flex-direction: column;
-    flex-grow: 1;
-    width: 100%;
-    overflow: hidden;
-}
-</style>
+<style scoped lang="scss"></style>

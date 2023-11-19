@@ -25,15 +25,23 @@ export default {
         async afterFileUpload(returnData: types.UploadDataType) {
             if (returnData.error === true) {
                 this.$toast.error('Error uploading: ' + returnData.message)
+
+                this.$emit('changeStep', 1, true)
             }
             else {
                 let contentFile = await readText(returnData.files[0])
-                // TODO: inject to use type of object
                 this.stepsData.originalFile = contentFile
-                this.stepsData.animationData = extractSVGAnimation(contentFile)
-                this.$emit('changeStep', 2)
+                let result = extractSVGAnimation(contentFile)
 
-                this.$toast.success('File uploaded')
+                if (result.error === false) {
+                    this.stepsData.animationData = result.data
+                    this.$emit('changeStep', 2)
+
+                    this.$toast.success('File uploaded and data extracted')
+                }
+                else {
+                    this.$toast.error(result.message || 'Error occured')
+                }
             }
         }
     },
@@ -43,11 +51,10 @@ export default {
     },
     inject: ['stepsData', 'browserInfo']
 }
-// TODO: drop icon
 </script>
 
 <template>
-    <div class="step" :class="returnStepClasses(thisStep, activeStep, this.browserInfo.isMobile)">
+    <div id="step-1" class="step" :class="returnStepClasses(thisStep, activeStep, this.browserInfo.isMobile)">
         <div class="step-title">
             <NumberComponent :number="'1'" :textUnder="'Upload an animated SVG'"
                 @click="(event: Event) => { $emit('changeStep', thisStep) }" />

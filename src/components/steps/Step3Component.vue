@@ -1,15 +1,17 @@
 
 <script lang="ts">
-import { returnStepClasses, readText } from '../functions'
+import { returnStepClasses, readText, setSVGAnimation } from '../functions'
 import NumberComponent from '../NumberComponent.vue'
 import UploadComponent from '../UploadComponent.vue'
+import PreviewComponent from '../PreviewComponent.vue'
 import type * as types from '../../types'
 
 export default {
-    name: 'ApplyComponent',
+    name: 'Step3Component',
     components: {
         NumberComponent,
-        UploadComponent
+        UploadComponent,
+        PreviewComponent
     },
     data() {
         return {
@@ -23,20 +25,29 @@ export default {
         async afterFileUpload(returnData: types.UploadDataType) {
             if (returnData.error === true) {
                 this.$toast.error('Error uploading: ' + returnData.message)
+                this.stepsData.newFile = undefined
             }
             else {
                 let contentFile = await readText(returnData.files[0])
-                // TODO: inject use type of object
                 this.stepsData.newFile = contentFile
 
                 this.$toast.success('New file uploaded')
             }
         },
         applyAnimation() {
-            this.stepsData.result = this.stepsData.newFile
-            this.$emit('changeStep', 4)
-            this.$toast.success('Animations applied')
-        }
+            let result: types.ResultObject = setSVGAnimation(this.stepsData.animationData, this.stepsData.newFile)
+
+            if (result.error === false) {
+                this.stepsData.result = result.data
+                if (this.stepsData.result !== undefined) {
+                    this.$emit('changeStep', 4)
+                    this.$toast.success('Animations applied')
+                }
+            } else {
+                this.stepsData.result = undefined
+                this.$toast.error(result.message || 'Error occured')
+            }
+        },
     },
     props: {
         activeStep: {
@@ -49,42 +60,19 @@ export default {
 </script>
 
 <template>
-    <div class="step" :class="returnStepClasses(thisStep, activeStep, this.browserInfo.isMobile)">
+    <div id="step-3" class="step" :class="returnStepClasses(thisStep, activeStep, this.browserInfo.isMobile)">
         <div class="step-title">
             <NumberComponent :number="'3'" :textUnder="'Upload new SVG to apply animation'" />
         </div>
         <div class="step-content">
-            <UploadComponent @afterFileUpload="afterFileUpload" :allowedExtension="'svg'" />
-            <div id="result-wrapper">
-                <div class="svg-preview">
-                    <div class="preview" v-show="this.stepsData.newFile !== ''">
-                        <!-- USE IFRAME to disable id styles from this SVG being applied to other previews -->
-                        <iframe class="preview-iframe" :srcdoc="previewPreCode + this.stepsData.newFile"
-                            sandbox=""></iframe>
-                    </div>
-                </div>
-            </div>
+            <UploadComponent @afterFileUpload="afterFileUpload" :allowedExtension="'svg'" :step="'newFile'" />
             <button class="apply-button" v-show="this.stepsData.newFile !== ''" @click="() => { applyAnimation() }"
                 title="Apply animation to new file">Apply animation!</button>
+            <div id="result-wrapper">
+                <PreviewComponent :showCondition="this.stepsData.newFile !== ''" :fileContent="'newFile'" />
+            </div>
         </div>
     </div>
 </template>
 
-<style scoped lang="scss">
-.apply-button {
-    cursor: pointer;
-    padding: 8px;
-    background-color: #ddf5ff;
-    color: #192034;
-    margin: 10px auto;
-    display: block;
-    border: 1px solid #3cfffc;
-    border-radius: 8px;
-    animation: all 1s alternate infinite;
-
-    &:hover {
-        padding-right: 15px;
-        padding-left: 15px;
-    }
-}
-</style>
+<style scoped lang="scss"></style>

@@ -1,10 +1,20 @@
 <script lang="ts">
 import { computed, reactive } from 'vue'
 import type * as types from '@/types'
+import { svgRequestId } from './components/functions/index'
+import { nanoid } from 'nanoid'
+
+// Set unique id for this session
+const requestId = sessionStorage.getItem(svgRequestId);
+if (requestId === null) {
+  sessionStorage.setItem(svgRequestId, nanoid())
+}
+
+let mobileWidth = 600
 
 const browserInfo = reactive({
   online: true,
-  isMobile: window.innerWidth < 600 ? true : false,
+  isMobile: window.innerWidth < mobileWidth ? true : false,
 } as types.BrowserInfoType)
 
 window.addEventListener("offline", () => {
@@ -15,7 +25,9 @@ window.addEventListener("online", () => {
   browserInfo.online = true
 })
 
-// TODO: resize listener!
+window.addEventListener("resize", () => {
+  browserInfo.isMobile = (window.innerWidth < mobileWidth ? true : false)
+})
 
 export default {
   data: () => ({

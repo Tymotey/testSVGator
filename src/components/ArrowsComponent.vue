@@ -21,6 +21,7 @@ export default {
             let activeStep: number = this.activeStep
             let canShow: boolean = true
 
+            // MESSY! but it works
             if (activeStep === 1) canShow = false
 
             return canShow
@@ -29,13 +30,13 @@ export default {
             let activeStep: number = this.activeStep
             let canShow: boolean = true
 
-            if (activeStep === 1 && this.stepsData.originalFile === '') canShow = false
-            // TODO: messy but is working
+            // MESSY! but it works
             if (this.browserInfo.isMobile) {
-                if (activeStep === 2 && this.stepsData.animationData === '') canShow = false
+                if (activeStep === 4) canShow = false
+                else if ((activeStep === 1 && this.stepsData.originalFile === '') || activeStep === 3) canShow = false
             }
             else {
-                if (activeStep === 2 && this.stepsData.newFile === '') canShow = false
+                if (activeStep !== 1 || (this.stepsData.newFile === '' || this.stepsData.originalFile === '')) canShow = false
             }
 
             return canShow
@@ -44,7 +45,7 @@ export default {
             let activeStep: number = this.activeStep
             let canShow: boolean = true
 
-            // TODO: messy but is working
+            // MESSY! but it works
             if (this.browserInfo.isMobile) {
                 if (activeStep === 1) canShow = false
             }
@@ -77,7 +78,7 @@ export default {
 
 <style scoped lang="scss">
 .arrow-wrapper {
-    position: absolute;
+    position: fixed;
     top: calc(50% - 25px);
     height: 50px;
     width: 50px;
@@ -95,16 +96,27 @@ export default {
 }
 
 .restart-wrapper {
-    position: absolute;
+    position: fixed;
     left: calc(50% - 30px);
     bottom: 0px;
     width: 60px;
-    height: 20px;
     line-height: 20px;
+    padding: 5px;
     text-align: center;
     color: $theme-pallete-main;
     cursor: pointer;
-    text-shadow: 1px 3px $theme-pallete-secondary;
+    border: 1px solid $theme-pallete-main;
+    border-bottom: 0px;
+    box-shadow: 2px 1px $theme-pallete-secondary;
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+    background-color: $theme-pallete-main;
+    color: #FFFFFF;
     z-index: 10;
+
+    &:hover {
+        background-color: transparent;
+        color: $theme-pallete-main;
+    }
 }
 </style>

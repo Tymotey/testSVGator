@@ -2,7 +2,7 @@
 <script lang="ts">
 import axios from 'axios'
 import type * as types from '@/types'
-import { fileExtensionsToMime } from '@/components/functions/index.js'
+import { svgRequestId, fileExtensionsToMime } from '../components/functions/index.js'
 
 export default {
     name: 'UploadComponent',
@@ -14,17 +14,18 @@ export default {
         };
     },
     methods: {
-        onChangeEvent(e: Event) {
+        clickDummyBrowse(e: Event) {
+            this.$refs.uploaderFileInput.click()
+        },
+        onChangeEvent(uploadFiles: File) {
             let returnData = {
                 error: true,
                 message: '',
                 files: [],
             } as types.UploadDataType
 
-
-            let uploadedFiles = e?.target?.files || null as File | null
-            if (uploadedFiles !== null) {
-                let uploadedFilesAsArray = Array.from(uploadedFiles) as File[]
+            if (uploadFiles !== null) {
+                let uploadedFilesAsArray = Array.from(uploadFiles) as File[]
                 if (this.singleFile === true) {
                     uploadedFilesAsArray = uploadedFilesAsArray.slice(0)
                 }
@@ -41,9 +42,29 @@ export default {
                 }
 
                 if (filesAllowed === true) {
-                    // TODO: server request
                     returnData.error = false
                     returnData.files = uploadedFilesAsArray
+                    this.$refs.uploaderFileInput.value = ''
+
+                    uploadedFilesAsArray.forEach(async (file) => {
+                        axios.post("http://127.0.0.1:5173/upload", {
+                            step: this.step,
+                            file: file,
+                            requestId: sessionStorage.getItem(svgRequestId)
+                        }, {
+                            onUploadProgress: ProgressEvent => {
+                                this.isUploading = true
+                                let progress = Math.round((ProgressEvent.loaded / ProgressEvent.total) * 100) + "%"
+                                this.progress = progress
+                            }
+                        })
+                            .then(res => {
+                                console.log(res);
+                            })
+                            .catch(err => {
+                                console.log(err);
+                            });
+                    })
                 }
                 else {
                     returnData.message = 'Incorrect file(s) type'
@@ -55,9 +76,38 @@ export default {
             }
 
             this.$emit('afterFileUpload', returnData)
+        },
+        dragEnter(e: Event) {
+            e.preventDefault()
+            e.stopPropagation()
+            this.$refs.uploaderWrapper.classList.add('higlighted')
+        },
+        dragleave(e: Event) {
+            e.preventDefault()
+            e.stopPropagation()
+            this.$refs.uploaderWrapper.classList.remove('higlighted')
+        },
+        dragover(e: Event) {
+            e.preventDefault()
+            e.stopPropagation()
+            this.$refs.uploaderWrapper.classList.add('higlighted')
+        },
+        dragdrop(e: DragEvent) {
+            e.preventDefault()
+            e.stopPropagation()
+            this.$refs.uploaderWrapper.classList.remove('higlighted')
+
+            let dt = e.dataTransfer as any
+            let files = dt.files
+
+            this.onChangeEvent(files)
         }
     },
     props: {
+        step: {
+            type: String,
+            default: 'originalFile'
+        },
         allowedExtension: {
             type: String,
             default: 'all'
@@ -75,9 +125,13 @@ export default {
 </script>
 
 <template>
-    <div class="uploader-wrapper">
+    <div class="uploader-wrapper" ref="uploaderWrapper" @dragenter="(e) => { dragEnter(e) }"
+        @dragleave="(e) => { dragleave(e) }" @dragover="(e) => { dragover(e) }" @drop="(e) => { dragdrop(e) }">
+        <img class="upload_icon" src="/images/upload.svg" title="Upload SVG" @click="(e) => { clickDummyBrowse(e) }" />
         <div class="uploader">
-            <input type="file" @change="onChangeEvent" :disabled="isUploading" />
+            <input type="file" @change="(e) => { onChangeEvent(e?.target?.files) }" :disabled="isUploading"
+                ref="uploaderFileInput" v-show="false" />
+            <input type="button" value="Browse..." @click="(e) => { clickDummyBrowse(e) }" />
             <div v-if="progress" id="progress-bar-wrapper">
                 <div class="progess-bar" :style="{ 'width': progress !== true ? progress : '0px' }"> {{ progress }}
                 </div>
@@ -87,8 +141,32 @@ export default {
 </template>
 
 <style scoped lang="scss">
+@mixin filter-upload-hover-style() {
+    // https://isotropic.co/tool/hex-color-to-css-filter/
+    filter: invert(92%) sepia(83%) saturate(3610%) hue-rotate(137deg) brightness(102%) contrast(105%);
+}
+
 .uploader-wrapper {
     text-align: center;
+    border: 2px dashed transparent;
+    padding: 10px;
+
+    .upload_icon {
+        width: 100px;
+        margin: 0px auto 20px;
+
+        &:hover {
+            @include filter-upload-hover-style();
+        }
+    }
+
+    &.higlighted {
+        border-color: #000000;
+
+        .upload_icon {
+            @include filter-upload-hover-style();
+        }
+    }
 
     .progress-bar-wrapper {
         width: 200px;

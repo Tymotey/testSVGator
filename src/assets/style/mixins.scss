@@ -1,0 +1,25 @@
+@mixin wrapper-grid($columns: 1fr, $gap: 2rem) {
+  display: grid;
+  gap: $gap;
+  grid-template-columns: $columns;
+}
+
+@mixin wrapper-responsive($columns: 2fr 3fr) {
+  @media (min-width: $query-width-tablet) {
+    grid-template-columns: $columns;
+  }
+}
+
+@mixin add-scroll-style() {
+  &::-webkit-scrollbar {
+    width: 6px;
+  }
+  &::-webkit-scrollbar-track {
+    background-color: #e4e4e4;
+    border-radius: 100px;
+  }
+  &::-webkit-scrollbar-thumb {
+    background-color: $theme-pallete-main;
+    border-radius: 100px;
+  }
+}

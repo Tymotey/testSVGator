@@ -1,5 +1,4 @@
 import type * as types from '../../../types'
-import { nanoidElement } from '../index'
 
 function getNodeData(
   node: any,
@@ -13,34 +12,47 @@ function getNodeData(
       data = [] as Array<types.SVGNodeData>
     }
 
-    const newData = {
-      svgPath: path,
-      id: node?.properties?.id || nanoidElement()
-    } as types.SVGNodeData
+    if (node?.properties?.id !== undefined || node?.properties?.class !== undefined) {
+      const newData: types.SVGNodeData = {
+        svgPath: path,
+        cssId: node?.properties?.id || null,
+        cssClass: node?.properties?.class || null
+      } as types.SVGNodeData
 
-    // getting animations(inline and tag style): https://svgwg.org/specs/animations/#ref-CSS3ANIMATIONS
-    // getting style from tag
-    const tagStyle = getNodeTagStyle(node)
-    if (tagStyle !== undefined && newData !== undefined) newData['tagStyle'] = tagStyle
+      // getting animations(inline and tag style): https://svgwg.org/specs/animations/#ref-CSS3ANIMATIONS
+      // getting style from tag
+      const tagStyle = getNodeTagStyle(node)
+      if (tagStyle !== undefined && newData !== undefined) {
+        newData['tagStyle'] = tagStyle
+      }
 
-    // getting inline style
-    const propertyStyle = getNodeProperty(node)
-    if (propertyStyle !== undefined && newData !== undefined) newData['style'] = propertyStyle
+      // getting inline style
+      const propertyStyle = getNodeProperty(node)
+      if (propertyStyle !== undefined && newData !== undefined) {
+        newData['style'] = propertyStyle
+      }
 
-    // getting css inline transform
-    const propertyTransform = getNodeProperty(node, 'transform')
-    if (propertyTransform !== undefined && newData !== undefined)
-      newData['transform'] = propertyTransform
+      // getting css inline transform
+      const propertyTransform = getNodeProperty(node, 'transform')
+      if (propertyTransform !== undefined && newData !== undefined) {
+        newData['transform'] = propertyTransform
+      }
 
-    if (tagStyle !== undefined || propertyStyle !== undefined || propertyTransform !== undefined) {
-      data.push(newData)
+      if (
+        tagStyle !== undefined ||
+        propertyStyle !== undefined ||
+        propertyTransform !== undefined
+      ) {
+        data.push(newData)
+      }
     }
 
-    if (node.children !== undefined && node.children.length > 1) {
+    if (node.children !== undefined && node.children.length > 0) {
       node.children.forEach((child: any, index: number) => {
         if (data !== undefined) {
           const newPath = [...path]
           newPath.push(index)
+
           getNodeData(child, newPath, data)
         }
       })
