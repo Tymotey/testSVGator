@@ -9,24 +9,24 @@ router.use(bodyParser.urlencoded({ extended: false }))
 
 router
   .post('/api/v1/upload', (req, res) => {
-    let data = req.body
+    const returnData = { error: true, data: {}, message: 'Error occured' }
 
     const form = formidable({})
     form.parse(req, function (err, fields, files) {
+      console.log('upload')
       if (err != null) {
-        console.log(err)
         return res.status(400).json({ message: err.message })
       }
-      const [firstFileName] = Object.keys(files)
+      const [fileName] = Object.keys(files)
 
-      res.json({ filename: firstFileName })
+      res.json({ filename: fileName })
       // TODO: finish here
     })
 
-    res.send('Data Received: ' + JSON.stringify(data))
+    res.send(returnData)
   })
   .get('/api/v1/upload', (_req, res) => {
-    res.json({ error: true, message: 'Try posting' })
+    res.send({ error: true, message: 'Try posting' })
   })
 
 export default router

@@ -8,8 +8,7 @@ How to test:
 
 Folder: `test_files` contains files I used for testing
 
-For Start:
-`npm install -g win-node-env`
+For Start run `npm run build-only` first
 
 I used:
 
@@ -17,4 +16,4 @@ I used:
 
 `// @ts-nocheck`
 
-to ignore all errors about inject
+to ignore all errors about VUE inject

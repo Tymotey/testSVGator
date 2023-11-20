@@ -117,11 +117,11 @@ export default {
     border: 1px solid $theme-pallete-main;
     border-bottom: 0px;
     box-shadow: 2px 1px $theme-pallete-secondary;
-    border-top-left-radius: 8px;
-    border-top-right-radius: 8px;
+    border-top-left-radius: $border-radius;
+    border-top-right-radius: $border-radius;
     background-color: $theme-pallete-main;
     color: #FFFFFF;
-    z-index: 1091;
+    z-index: 1090;
 
     &:hover {
         background-color: transparent;

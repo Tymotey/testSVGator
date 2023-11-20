@@ -1,7 +1,7 @@
 
 <script lang="ts">
 import axios, { type AxiosProgressEvent } from 'axios'
-import type * as types from '@/types'
+import type * as types from '../types'
 import { svgRequestId, fileExtensionsToMime } from '../components/functions/index.js'
 
 export default {
@@ -189,12 +189,12 @@ export default {
     }
 
     .button-browse {
-        appearance: unset;
         border: 0px;
         padding: 10px;
         cursor: pointer;
         background-color: $theme-pallete-main;
         color: #FFFFFF;
+        border-radius: $border-radius;
 
         &:hover {
             background-color: $theme-pallete-secondary;
