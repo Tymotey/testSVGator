@@ -2,17 +2,16 @@ import express from 'express'
 import path from 'path'
 import homepageRouter from './homepageRouter.js'
 import assetsRouter from './assetsRouter.js'
+import uploadRouter from './uploadRouter.js'
 
+// eslint-disable-next-line no-undef
 const port = process.env.PORT || 3000
-const publicPath = path.join(path.resolve(), 'public')
+const publicPath = path.join(path.resolve(), 'src')
 const distPath = path.join(path.resolve(), 'dist')
 
 const app = express()
 
-app.get('/api/v1/upload', (_req, res) => {
-  res.json({ message: 'Hello, world!' })
-})
-
+// eslint-disable-next-line no-undef
 if (process.env.NODE_ENV === 'production') {
   app.use('/', express.static(distPath))
 } else {
@@ -21,6 +20,7 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 app.use(homepageRouter)
+app.use(uploadRouter)
 
 app.listen(port, () => {
   console.log('Server listening on port', port)

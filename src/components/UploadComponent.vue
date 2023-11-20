@@ -1,6 +1,6 @@
 
 <script lang="ts">
-import axios from 'axios'
+import axios, { type AxiosProgressEvent } from 'axios'
 import type * as types from '@/types'
 import { svgRequestId, fileExtensionsToMime } from '../components/functions/index.js'
 
@@ -17,7 +17,7 @@ export default {
         clickDummyBrowse() {
             this.$refs.uploaderFileInput.click()
         },
-        onChangeEvent(uploadFiles: File) {
+        onChangeEvent(uploadFiles: File[]) {
             let returnData = {
                 error: true,
                 message: '',
@@ -52,16 +52,23 @@ export default {
                             file: file,
                             requestId: sessionStorage.getItem(svgRequestId)
                         }, {
-                            onUploadProgress: ProgressEvent => {
+                            headers: {
+                                'Content-Type': 'application/x-www-form-urlencoded'
+                            },
+                            onUploadProgress: (ProgressEvent: AxiosProgressEvent) => {
                                 this.isUploading = true
-                                let progress = Math.round((ProgressEvent.loaded / ProgressEvent.total) * 100) + "%"
-                                this.progress = progress
+                                let progress = Math.round((ProgressEvent.loaded / (ProgressEvent.total || 0)) * 100) + "%"
+                                this.progress = !!progress
                             }
                         })
                             .then(res => {
+                                this.isUploading = false
+                                this.progress = false
                                 console.log(res);
                             })
                             .catch(err => {
+                                this.isUploading = false
+                                this.progress = false
                                 console.log(err);
                             });
                     })
@@ -122,8 +129,7 @@ export default {
     },
     inject: ['stepsData']
 }
-// TODO: sa dispara progress
-// TODO: uplaod server check
+
 </script>
 
 <template>
@@ -131,7 +137,7 @@ export default {
         @dragleave="(e) => { dragleave(e) }" @dragover="(e) => { dragover(e) }" @drop="(e) => { dragdrop(e) }">
         <img class="upload_icon" src="/src/assets/upload.svg" title="Upload SVG" @click="(e) => { clickDummyBrowse() }" />
         <div class="uploader">
-            <input type="file" @change="(e) => { onChangeEvent(e?.target?.files) }" :disabled="isUploading"
+            <input type="file" @change="(e: Event) => { onChangeEvent(e?.target?.files) }" :disabled="isUploading"
                 ref="uploaderFileInput" v-show="false" />
             <input type="button" class="button-browse" value="Browse..." @click="(e) => { clickDummyBrowse() }" />
             <div v-if="progress" class="progress-bar-wrapper">

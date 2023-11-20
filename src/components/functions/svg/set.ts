@@ -15,7 +15,7 @@ function setNodeData(animationData: Array<types.SVGNodeData>, file: string = '')
     const selector: string = [elId, elClass].join('')
 
     // Get element
-    const elementSelected: Element | null = parsedSVG.querySelector(selector)
+    const elementSelected: any | null = parsedSVG.querySelector(selector)
 
     if (elementSelected !== null && elementSelected !== undefined) {
       if (animation?.tagStyle !== undefined) {

@@ -24,11 +24,11 @@ export default {
         ArrowsComponent
     },
     data: () => ({
-        activeStep: activeStep.value,
-        stepsData: stepsData,
+        activeStep: activeStep.value as number,
+        stepsData: stepsData as types.StepsData,
     }),
     methods: {
-        changeStep(newStep: Number, resetOnly: boolean = false) {
+        changeStep(newStep: number, resetOnly: boolean = false) {
             // I can add them in "context"(provide) but for learning sake I left them as parameters to components
             const resetValue = {
                 originalFile: '',
@@ -52,7 +52,8 @@ export default {
     },
     provide() {
         return {
-            stepsData: computed(() => this.stepsData as types.StepsData)
+            // TODO: type add
+            stepsData: computed(() => this.stepsData)
         }
     }
 }

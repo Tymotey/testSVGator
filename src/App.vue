@@ -31,12 +31,12 @@ window.addEventListener("resize", () => {
 
 export default {
   data: () => ({
-    browserInfo: browserInfo,
+    browserInfo: browserInfo as types.BrowserInfoType,
   }),
   provide() {
     return {
-      // TODO: add type
-      browserInfo: computed(() => this.browserInfo as types.BrowserInfoType)
+      // TODO: type add
+      browserInfo: computed(() => this.browserInfo)
     }
   }
 }
