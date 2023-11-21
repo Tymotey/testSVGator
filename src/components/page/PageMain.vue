@@ -29,7 +29,7 @@ export default {
     }),
     methods: {
         changeStep(newStep: number, resetOnly: boolean = false) {
-            // I can add them in "context"(provide) but for learning sake I left them as parameters to components
+            // I can add method in "context"(provide) but for learning sake I left them as parameters to components
             const resetValue = {
                 originalFile: '',
                 animationData: undefined,

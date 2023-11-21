@@ -47,13 +47,15 @@ export default {
                     this.$refs.uploaderFileInput.value = ''
 
                     uploadedFilesAsArray.forEach(async (file) => {
-                        axios.post("http://localhost:3000/api/v1/upload", {
-                            step: this.step,
-                            file: file,
-                            requestId: sessionStorage.getItem(svgRequestId)
-                        }, {
+
+                        const bodyFormData = new FormData()
+                        bodyFormData.append('step', this.step)
+                        bodyFormData.append('file', file)
+                        bodyFormData.append('clientId', sessionStorage.getItem(svgRequestId) as string)
+
+                        axios.post("http://localhost:3000/api/v1/upload", bodyFormData, {
                             headers: {
-                                'Content-Type': 'application/x-www-form-urlencoded'
+                                'Content-Type': 'multipart/form-data'
                             },
                             onUploadProgress: (ProgressEvent: AxiosProgressEvent) => {
                                 this.isUploading = true

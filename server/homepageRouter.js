@@ -4,7 +4,6 @@ import path from 'path'
 
 const router = express.Router()
 
-// eslint-disable-next-line no-undef
 const environment = process.env.NODE_ENV || 'development'
 
 router.get('/*', async (_req, res) => {
