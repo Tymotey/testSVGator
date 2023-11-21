@@ -39,6 +39,7 @@ router
       if (req.body.clientId !== undefined) {
         const uploadedFile = req.files.file
 
+        // public for now, but is not ok for security
         const __dirname = process.cwd() + '/public'
         const path =
           '/uploads/' +
@@ -51,7 +52,7 @@ router
           uploadedFile.name
         const uploadPath = __dirname + path
 
-        // there is a better way
+        // there is a better way!
         if (!fs.existsSync(__dirname + '/uploads/' + req.body.step)) {
           fs.mkdirSync(__dirname + '/uploads/' + req.body.step)
         }
