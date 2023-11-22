@@ -12,10 +12,21 @@ RUN ln -s /opt/nodejs/bin/node /usr/local/bin/node
 RUN ln -s /opt/nodejs/bin/npm /usr/local/bin/npm
 RUN npm install -g npm@9.6.6
 RUN apk add g++ make py3-pip
+RUN apk add --no-cache git
+# RUN apk add --no-cache openssh
+
+# Add ssh key
+# RUN mkdir /root/.ssh && chmod -R 700 /root/.ssh
+# RUN ssh-keyscan github.com >> /root/.ssh/known_hosts
 
 # add our files
 WORKDIR /usr/src/app
-COPY . .
+# copy from pc
+# COPY . .
+
+# git clonning
+RUN git clone https://github.com/Tymotey/testSVGator.git /usr/src/app
+
 EXPOSE 3000
 
 RUN npm install
