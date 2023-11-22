@@ -14,7 +14,7 @@ npm run dev
 # Server Production
 
 ```
-npm run build-only
+npm run build
 npm run start
 ```
 

@@ -1,4 +1,6 @@
-export type BrowserInfoType = { 
-    online: boolean,
-    isMobile: boolean
+export type BrowserInfoType = {
+  online: boolean
+  isMobile: boolean
+  isTablet: boolean
+  isMaxTablet: boolean
 }

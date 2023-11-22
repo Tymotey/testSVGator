@@ -1,6 +1,5 @@
-
 <script lang="ts">
-import { returnStepClasses, readText, setSVGAnimation } from '../functions'
+import { readText, setSVGAnimation } from '../functions/index'
 import NumberComponent from '../NumberComponent.vue'
 import UploadComponent from '../UploadComponent.vue'
 import PreviewComponent from '../PreviewComponent.vue'
@@ -17,9 +16,14 @@ export default {
         return {
             // not best solution to resize preview but with JS onload I had same origin cors error
             previewPreCode: '<style>svg{ width: 100%; height: auto; max-width: 300px; max-height: 300px; }</style>',
-            thisStep: 3,
-            returnStepClasses: returnStepClasses,
+            thisStep: 3
         };
+    },
+    props: {
+        activeStep: {
+            type: Number,
+            default: 1
+        }
     },
     methods: {
         async afterFileUpload(returnData: types.UploadDataType) {
@@ -49,18 +53,12 @@ export default {
             }
         },
     },
-    props: {
-        activeStep: {
-            type: Number,
-            default: 1
-        }
-    },
-    inject: ['stepsData', 'browserInfo']
+    inject: ['stepsData']
 }
 </script>
 
 <template>
-    <div id="step-3" class="step" :class="returnStepClasses(thisStep, activeStep, this.browserInfo.isMobile)">
+    <div id="step-3" class="step">
         <div class="step-title">
             <NumberComponent :number="'3'" :textUnder="'Upload new SVG to apply animation'" />
         </div>

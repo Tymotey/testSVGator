@@ -8,7 +8,7 @@ import Step4Component from '../steps/Step4Component.vue'
 import ArrowsComponent from '../ArrowsComponent.vue'
 
 const activeStep = ref<any>(1)
-const stepsData = reactive({
+let stepsData: types.StepsData = reactive({
     originalFile: '',
     animationData: undefined,
     newFile: '',
@@ -24,48 +24,54 @@ export default {
         ArrowsComponent
     },
     data: () => ({
+        // use activeStep value
         activeStep: activeStep.value as number,
-        stepsData: stepsData as types.StepsData,
     }),
     methods: {
+        // I can add method in "context"(provide) but for learning sake I left them as parameters to components
         changeStep(newStep: number, resetOnly: boolean = false) {
-            // I can add method in "context"(provide) but for learning sake I left them as parameters to components
-            const resetValue = {
-                originalFile: '',
-                animationData: undefined,
-                newFile: '',
-                result: ''
-            }
-
             if (resetOnly) {
-                this.stepsData = resetValue
+                stepsData.originalFile = ''
+                stepsData.animationData = undefined
+                stepsData.newFile = ''
+                stepsData.result = ''
                 this.activeStep = 1
             }
             else {
-                let canChangeStep = true as boolean
-
-                if (canChangeStep) {
-                    this.activeStep = newStep
+                this.activeStep = newStep
+            }
+        },
+        showStep(elementStep: number) {
+            let available = [this.activeStep]
+            if (this.browserInfo.isMaxTablet === false) {
+                if (this.activeStep + 1 <= 4) {
+                    available.push(this.activeStep + 1)
+                }
+                if (this.activeStep === 4) {
+                    available.unshift(3)
                 }
             }
+
+            if (available.indexOf(elementStep) !== -1) return true
+            return false
         }
     },
     provide() {
         return {
-            // TODO: type add
-            stepsData: computed(() => this.stepsData)
+            stepsData: stepsData as types.StepsData
         }
-    }
+    },
+    inject: ['browserInfo']
 }
 </script>
 
 <template>
     <ArrowsComponent :activeStep="activeStep" @changeStep="changeStep" />
     <main>
-        <Step1Component :activeStep="activeStep" @changeStep="changeStep" />
-        <Step2Component :activeStep="activeStep" @changeStep="changeStep" />
-        <Step3Component :activeStep="activeStep" @changeStep="changeStep" />
-        <Step4Component :activeStep="activeStep" @changeStep="changeStep" />
+        <Step1Component :activeStep="activeStep" @changeStep="changeStep" v-if="showStep(1)" />
+        <Step2Component :activeStep="activeStep" @changeStep="changeStep" v-if="showStep(2)" />
+        <Step3Component :activeStep="activeStep" @changeStep="changeStep" v-if="showStep(3)" />
+        <Step4Component :activeStep="activeStep" @changeStep="changeStep" v-if="showStep(4)" />
     </main>
 </template>
 

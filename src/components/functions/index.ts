@@ -4,23 +4,17 @@ import { getNodeData } from './svg/get'
 import { setNodeData } from './svg/set'
 import type * as types from '../../types'
 
-export const svgRequestId = 'svgRequestId'
-export const nanoidElement = customAlphabet('1234567890abcdefghijklmnopqrstuvwxyz', 10)
+export const svgRequestId: string = 'svgRequestId'
+export const nanoidElement: Function = customAlphabet('1234567890abcdefghijklmnopqrstuvwxyz', 10)
 
-const returnStepClasses = (componentStep: number, activeStep: number, isMobile: boolean = true) => {
-  let addPast = false
-  let addDisabled = false
-
-  if (isMobile) {
-    addPast = addDisabled = componentStep !== activeStep
-  } else {
-    addPast = componentStep !== 3 && activeStep > componentStep
-    addDisabled = activeStep + 1 < componentStep
-  }
-
-  return {
-    'step-past': addPast,
-    'step-disabled': addDisabled
+const debounce = (callback: Function, wait: number = 10) => {
+  let timeoutId: number | undefined = undefined
+  return (...args: any) => {
+    window.clearTimeout(timeoutId)
+    timeoutId = window.setTimeout(() => {
+      // eslint-disable-next-line prefer-spread
+      callback.apply(null, args)
+    }, wait)
   }
 }
 
@@ -110,6 +104,7 @@ function setSVGAnimation(animationData: Array<types.SVGNodeData>, file: string =
 }
 
 export {
+  debounce,
   returnStepClasses,
   fileExtensionsToMime,
   readText,

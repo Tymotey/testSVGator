@@ -6,6 +6,8 @@
   "type": "module",
   "main": "server/index.js",
   "scripts": {
+    "docker:build": "docker build -t svgator/test . && docker login && docker push svgator/test",
+    "docker:start": "docker run -it -p 3000:3000 --rm --name test svgator/test",
     "dev:frontend": "vite",
     "dev:backend": "nodemon server/index.ts",
     "dev": "set NODE_ENV=development && concurrently 'npm:dev:frontend' 'npm:dev:backend'",
@@ -20,6 +22,7 @@
   "dependencies": {
     "axios": "^1.6.2",
     "body-parser": "^1.20.2",
+    "dotenv": "^16.3.1",
     "ejs": "^3.1.9",
     "express": "^4.18.2",
     "express-fileupload": "^1.4.2",

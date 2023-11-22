@@ -1,5 +1,5 @@
 <script lang="ts">
-import { returnStepClasses, readText, extractSVGAnimation } from '../functions'
+import { readText, extractSVGAnimation } from '../functions/index'
 import NumberComponent from '../NumberComponent.vue'
 import UploadComponent from '../UploadComponent.vue'
 import type * as types from '../../types'
@@ -9,7 +9,6 @@ export default {
     data() {
         return {
             thisStep: 1,
-            returnStepClasses: returnStepClasses
         };
     },
     props: {
@@ -49,12 +48,12 @@ export default {
         NumberComponent,
         UploadComponent
     },
-    inject: ['stepsData', 'browserInfo']
+    inject: ['stepsData']
 }
 </script>
 
 <template>
-    <div id="step-1" class="step" :class="returnStepClasses(thisStep, activeStep, this.browserInfo.isMobile)">
+    <div id="step-1" class="step">
         <div class="step-title">
             <NumberComponent :number="'1'" :textUnder="'Upload an animated SVG'"
                 @click="(event: Event) => { $emit('changeStep', thisStep) }" />

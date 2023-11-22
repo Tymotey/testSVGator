@@ -1,6 +1,5 @@
-
 <script lang="ts">
-import { returnStepClasses, downloadOnTheFly } from '../functions'
+import { downloadOnTheFly } from '../functions/index'
 import NumberComponent from '../NumberComponent.vue'
 import PreviewComponent from '../PreviewComponent.vue'
 
@@ -13,8 +12,7 @@ export default {
     data() {
         return {
             thisStep: 4,
-            returnStepClasses: returnStepClasses,
-            downloadOnTheFly: downloadOnTheFly,
+            downloadOnTheFly: downloadOnTheFly
         };
     },
     props: {
@@ -23,12 +21,12 @@ export default {
             default: 1
         }
     },
-    inject: ['stepsData', 'browserInfo']
+    inject: ['stepsData']
 }
 </script>
 
 <template>
-    <div id="step-4" class="step" :class="returnStepClasses(thisStep, activeStep, this.browserInfo.isMobile)">
+    <div id="step-4" class="step">
         <div class="step-title">
             <NumberComponent :number="'4'" :textUnder="'Results'" />
         </div>

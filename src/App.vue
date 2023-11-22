@@ -1,7 +1,7 @@
 <script lang="ts">
 import { computed, reactive } from 'vue'
 import type * as types from '@/types'
-import { svgRequestId } from './components/functions/index'
+import { svgRequestId, debounce } from './components/functions/index'
 import { nanoid } from 'nanoid'
 
 // Set unique id for this session
@@ -11,10 +11,13 @@ if (requestId === null) {
 }
 
 let mobileWidth = 600
+let tabletWidth = 900
 
-const browserInfo = reactive({
+const browserInfo: types.BrowserInfoType = reactive({
   online: true,
   isMobile: window.innerWidth < mobileWidth ? true : false,
+  isMaxTablet: window.innerWidth < tabletWidth ? true : false,
+  isTablet: (window.innerWidth < tabletWidth && window.innerWidth > mobileWidth) ? true : false,
 } as types.BrowserInfoType)
 
 window.addEventListener("offline", () => {
@@ -25,18 +28,17 @@ window.addEventListener("online", () => {
   browserInfo.online = true
 })
 
-window.addEventListener("resize", () => {
-  browserInfo.isMobile = (window.innerWidth < mobileWidth ? true : false)
-})
+window.addEventListener("resize",
+  debounce((ev: Event) => {
+    browserInfo.isMobile = (window.innerWidth < mobileWidth ? true : false)
+    browserInfo.isMaxTablet = (window.innerWidth < tabletWidth ? true : false)
+    browserInfo.isTablet = ((window.innerWidth < tabletWidth && window.innerWidth > mobileWidth) ? true : false)
+  }, 10))
 
 export default {
-  data: () => ({
-    browserInfo: browserInfo as types.BrowserInfoType,
-  }),
   provide() {
     return {
-      // TODO: type add
-      browserInfo: computed(() => this.browserInfo)
+      browserInfo: computed(() => { return browserInfo as types.BrowserInfoType })
     }
   }
 }

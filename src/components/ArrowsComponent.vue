@@ -1,5 +1,6 @@
 
 <script lang="ts">
+
 export default {
     name: 'ArrowsComponent',
     props: {
@@ -13,36 +14,36 @@ export default {
     },
     methods: {
         prevFunction(e: Event) {
-            let step: number = this.activeStep
-            if (step == 4) step = 3
+            let activeStep: number = this.activeStep
+            if (!this.browserInfo.isMaxTablet) {
+                if (activeStep == 4) activeStep = 3
+            }
 
-            this.$emit('changeStep', step - 1)
+            this.$emit('changeStep', activeStep - 1)
         },
         canShowPrevFunction() {
-            let activeStep: number = this.activeStep
             let canShow: boolean = true
 
             // MESSY! but it works
-            if (activeStep === 1) canShow = false
+            if (this.activeStep === 1) canShow = false
 
             return canShow
         },
         nextFunction(e: Event) {
-            let step: number = this.activeStep
-
-            this.$emit('changeStep', step + 1)
+            this.$emit('changeStep', this.activeStep + 1)
         },
         canShowNextFunction() {
-            let activeStep: number = this.activeStep
             let canShow: boolean = true
 
             // MESSY logic! but it works
-            if (this.browserInfo.isMobile) {
-                if (activeStep === 4) canShow = false
-                else if ((activeStep === 1 && this.stepsData.originalFile === '') || activeStep === 3) canShow = false
+            if (this.browserInfo.isMaxTablet) {
+                if (this.activeStep === 4) canShow = false
+                if (this.activeStep === 1 && this.stepsData.originalFile === '') canShow = false
+                if (this.activeStep === 3 && this.stepsData.newFile === '') canShow = false
             }
             else {
-                if (activeStep !== 1 || (this.stepsData.newFile === '' || this.stepsData.originalFile === '')) canShow = false
+                if (this.activeStep === 1 && this.stepsData.originalFile === '') canShow = false
+                if (this.activeStep === 2 && this.stepsData.newFile === '') canShow = false
             }
 
             return canShow
@@ -56,8 +57,7 @@ export default {
             let activeStep: number = this.activeStep
             let canShow: boolean = true
 
-            // MESSY logic! but it works
-            if (this.browserInfo.isMobile) {
+            if (this.browserInfo.isMaxTablet) {
                 if (activeStep === 1) canShow = false
             }
             else {

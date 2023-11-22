@@ -1,8 +1,8 @@
 
 <script lang="ts">
-import axios, { type AxiosProgressEvent } from 'axios'
-import type * as types from '../types'
-import { svgRequestId, fileExtensionsToMime } from '../components/functions/index.js'
+import axios, { type AxiosProgressEvent } from 'axios';
+import { fileExtensionsToMime, svgRequestId } from '../components/functions/index.js';
+import type * as types from '../types';
 
 export default {
     name: 'UploadComponent',
@@ -15,9 +15,11 @@ export default {
     },
     methods: {
         clickDummyBrowse() {
-            this.$refs.uploaderFileInput.click()
+            let uploaderInput = this.$refs.uploaderFileInput as HTMLInputElement
+            uploaderInput.click()
         },
         onChangeEvent(uploadFiles: File[]) {
+            let inputRef = this.$refs.uploaderFileInput as HTMLInputElement
             let returnData = {
                 error: true,
                 message: '',
@@ -44,10 +46,9 @@ export default {
                 if (filesAllowed === true) {
                     returnData.error = false
                     returnData.files = uploadedFilesAsArray
-                    this.$refs.uploaderFileInput.value = ''
+                    inputRef.value = ''
 
                     uploadedFilesAsArray.forEach(async (file) => {
-
                         const bodyFormData = new FormData()
                         bodyFormData.append('step', this.step)
                         bodyFormData.append('file', file)
@@ -66,12 +67,12 @@ export default {
                             .then(res => {
                                 this.isUploading = false
                                 this.progress = false
-                                console.log(res);
+                                console.log('File uploaded. Debug:', res);
                             })
                             .catch(err => {
                                 this.isUploading = false
                                 this.progress = false
-                                console.log(err);
+                                console.error('File NOT uploaded. Debug:', err);
                             });
                     })
                 }
@@ -87,24 +88,28 @@ export default {
             this.$emit('afterFileUpload', returnData)
         },
         dragEnter(e: Event) {
+            let uploader = this.$refs.uploaderWrapper as HTMLElement
             e.preventDefault()
             e.stopPropagation()
-            this.$refs.uploaderWrapper.classList.add('higlighted')
+            uploader.classList.add('higlighted')
         },
         dragleave(e: Event) {
+            let uploader = this.$refs.uploaderWrapper as HTMLElement
             e.preventDefault()
             e.stopPropagation()
-            this.$refs.uploaderWrapper.classList.remove('higlighted')
+            uploader.classList.remove('higlighted')
         },
         dragover(e: Event) {
+            let uploader = this.$refs.uploaderWrapper as HTMLElement
             e.preventDefault()
             e.stopPropagation()
-            this.$refs.uploaderWrapper.classList.add('higlighted')
+            uploader.classList.add('higlighted')
         },
         dragdrop(e: DragEvent) {
+            let uploader = this.$refs.uploaderWrapper as HTMLElement
             e.preventDefault()
             e.stopPropagation()
-            this.$refs.uploaderWrapper.classList.remove('higlighted')
+            uploader.classList.remove('higlighted')
 
             let dt = e.dataTransfer as any
             let files = dt.files
@@ -139,7 +144,7 @@ export default {
         @dragleave="(e) => { dragleave(e) }" @dragover="(e) => { dragover(e) }" @drop="(e) => { dragdrop(e) }">
         <img class="upload_icon" src="/src/assets/upload.svg" title="Upload SVG" @click="(e) => { clickDummyBrowse() }" />
         <div class="uploader">
-            <input type="file" @change="(e: Event) => { onChangeEvent(e?.target?.files) }" :disabled="isUploading"
+            <input type="file" @change="(e: any) => { onChangeEvent(e?.target?.files) }" :disabled="isUploading"
                 ref="uploaderFileInput" v-show="false" />
             <input type="button" class="button-browse" value="Browse..." @click="(e) => { clickDummyBrowse() }" />
             <div v-if="progress" class="progress-bar-wrapper">
