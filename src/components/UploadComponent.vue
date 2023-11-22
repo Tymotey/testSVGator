@@ -67,7 +67,8 @@ export default {
                             .then(res => {
                                 this.isUploading = false
                                 this.progress = false
-                                console.log('File uploaded. Debug:', res);
+                                console.log('File uploaded. Path:', res.data.data.path);
+                                console.log('Debug:', res);
                             })
                             .catch(err => {
                                 this.isUploading = false
@@ -142,7 +143,7 @@ export default {
 <template>
     <div class="uploader-wrapper" ref="uploaderWrapper" @dragenter="(e) => { dragEnter(e) }"
         @dragleave="(e) => { dragleave(e) }" @dragover="(e) => { dragover(e) }" @drop="(e) => { dragdrop(e) }">
-        <img class="upload_icon" src="/src/assets/upload.svg" title="Upload SVG" @click="(e) => { clickDummyBrowse() }" />
+        <img class="upload_icon" src="/images/upload.svg" title="Upload SVG" @click="(e) => { clickDummyBrowse() }" />
         <div class="uploader">
             <input type="file" @change="(e: any) => { onChangeEvent(e?.target?.files) }" :disabled="isUploading"
                 ref="uploaderFileInput" v-show="false" />

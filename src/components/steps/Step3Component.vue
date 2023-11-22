@@ -29,7 +29,7 @@ export default {
         async afterFileUpload(returnData: types.UploadDataType) {
             if (returnData.error === true) {
                 this.$toast.error('Error uploading: ' + returnData.message)
-                this.stepsData.newFile = undefined
+                this.stepsData.newFile = ''
             }
             else {
                 let contentFile = await readText(returnData.files[0])

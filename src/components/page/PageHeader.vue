@@ -9,7 +9,7 @@ export default {
 <template>
   <div v-show="!this.browserInfo?.online || false" id="offline-warning">Device is offline</div>
   <header>
-    <img class="logo" src="/src/assets/logo.png" title="SVGator" />
+    <img class="logo" src="/images/logo.png" title="SVGator" />
   </header>
 </template>
 

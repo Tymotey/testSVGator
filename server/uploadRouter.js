@@ -37,43 +37,49 @@ router
       res.status(400).send(returnData)
     } else {
       if (req.body.clientId !== undefined) {
-        const uploadedFile = req.files.file
+        if (req.body.step !== undefined) {
+          const uploadedFile = req.files.file
 
-        // public for now, but is not ok for security
-        const __dirname = process.cwd() + '/public'
-        const path =
-          '/uploads/' +
-          req.body.step +
-          '/' +
-          req.body.clientId +
-          '/' +
-          filePrefix() +
-          '-' +
-          uploadedFile.name
-        const uploadPath = __dirname + path
+          // public for now, but is not ok for security
+          const __dirname = process.cwd() + '/public'
+          const path =
+            '/uploads/' +
+            req.body.step +
+            '/' +
+            req.body.clientId +
+            '/' +
+            filePrefix() +
+            '-' +
+            uploadedFile.name
+          const uploadPath = __dirname + path
 
-        // there is a better way!
-        if (!fs.existsSync(__dirname + '/uploads/' + req.body.step)) {
-          fs.mkdirSync(__dirname + '/uploads/' + req.body.step)
-        }
-        if (!fs.existsSync(__dirname + '/uploads/' + req.body.step + '/' + req.body.clientId)) {
-          fs.mkdirSync(__dirname + '/uploads/' + req.body.step + '/' + req.body.clientId)
-        }
-
-        // mv() to place the file somewhere on your server
-        uploadedFile.mv(uploadPath, function (err) {
-          if (err) {
-            returnData.message = err
-
-            res.status(400).send(returnData)
-          } else {
-            returnData.error = false
-            returnData.data = { path }
-            returnData.message = ''
-
-            res.send(returnData)
+          // there is a better way to create folders!
+          if (!fs.existsSync(__dirname + '/uploads/' + req.body.step)) {
+            fs.mkdirSync(__dirname + '/uploads/' + req.body.step)
           }
-        })
+          if (!fs.existsSync(__dirname + '/uploads/' + req.body.step + '/' + req.body.clientId)) {
+            fs.mkdirSync(__dirname + '/uploads/' + req.body.step + '/' + req.body.clientId)
+          }
+
+          // mv() to place the file somewhere on your server
+          uploadedFile.mv(uploadPath, function (err) {
+            if (err) {
+              returnData.message = err
+
+              res.status(400).send(returnData)
+            } else {
+              returnData.error = false
+              returnData.data = { path }
+              returnData.message = ''
+
+              res.send(returnData)
+            }
+          })
+        } else {
+          returnData.message = 'No step data sent'
+
+          res.status(400).send(returnData)
+        }
       } else {
         returnData.message = 'Incomplete data sent to server'
 

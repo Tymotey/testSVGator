@@ -55,7 +55,7 @@ export default {
                 <div v-show="canShowPreview()">
                     <span class="label-save">
                         <span>Animation data</span>
-                        <img class="save_icon" src="/src/assets/save.svg"
+                        <img class="save_icon" src="/images/save.svg"
                             @click="() => { downloadOnTheFly(JSON.stringify(this.stepsData.animationData)) }"
                             title="Save animation to JSON" />
                     </span>

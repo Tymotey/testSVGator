@@ -12,7 +12,7 @@ let stepsData: types.StepsData = reactive({
     originalFile: '',
     animationData: undefined,
     newFile: '',
-    result: ''
+    result: '',
 } as types.StepsData)
 
 export default {
