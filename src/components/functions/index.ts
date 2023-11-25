@@ -105,6 +105,7 @@ function setSVGAnimation(animationData: Array<types.SVGNodeData>, file: string =
 
 export {
   debounce,
+  returnStepClasses,
   fileExtensionsToMime,
   readText,
   downloadOnTheFly,
