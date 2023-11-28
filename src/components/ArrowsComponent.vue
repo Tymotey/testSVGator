@@ -42,6 +42,7 @@ export default {
                 if (this.activeStep === 3 && this.stepsData.newFile === '') canShow = false
             }
             else {
+                if (this.activeStep === 4) canShow = false
                 if (this.activeStep === 1 && this.stepsData.originalFile === '') canShow = false
                 if (this.activeStep === 2 && this.stepsData.newFile === '') canShow = false
             }

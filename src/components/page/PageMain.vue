@@ -26,6 +26,7 @@ export default {
     data: () => ({
         // use activeStep value
         activeStep: activeStep.value as number,
+        stepsData: stepsData as types.StepsData,
     }),
     methods: {
         // I can add method in "context"(provide) but for learning sake I left them as parameters to components

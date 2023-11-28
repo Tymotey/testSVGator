@@ -5,5 +5,6 @@ export type StepsData = {
   originalFilePath?: string
   animationData?: Array<SVGNodeData> | undefined
   newFile?: string
+  newFilePath?: string
   result?: string
 }

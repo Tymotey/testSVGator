@@ -51,7 +51,8 @@ export default {
         </div>
         <div class="step-content">
             <div class="svg-preview">
-                <PreviewComponent :showCondition="canShowPreview()" />
+                <PreviewComponent :showCondition="canShowPreview()" :fileContent="'originalFile'"
+                    :filePath="'originalFilePath'" />
                 <div v-show="canShowPreview()">
                     <span class="label-save">
                         <span>Animation data</span>

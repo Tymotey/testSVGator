@@ -4,8 +4,7 @@ export default {
     name: 'PreviewComponent.',
     data() {
         return {
-            // not best solution to resize preview but with JS onload I had same origin cors error
-            previewPreCode: '<style>svg{ width: 100%; height: auto; max-width: 300px; max-height: 300px; }</style>',
+            previewCode: `<?xml version="1.0" encoding="UTF-8"?> <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">`
         };
     },
     props: {
@@ -13,10 +12,28 @@ export default {
             type: Boolean,
             default: false
         },
-        fileContent: {
+        filePath: {
             type: String,
             default: 'originalFilePath'
+        },
+        fileContent: {
+            type: String,
+            default: ''
         }
+    },
+    methods: {
+        getPreviewLink() {
+            return this.stepsData[this.filePath] as string
+        },
+        showAsLink() {
+            return this.fileContent === '' && this.stepsData[this.filePath] !== '' as boolean
+        },
+        getPreviewData() {
+            return this.fileContent !== '' ? this.stepsData[this.fileContent] : '' as string
+        },
+        showAsData() {
+            return this.fileContent !== '' && (this.stepsData[this.filePath] === undefined || this.stepsData[this.filePath] === '')
+        },
     },
     inject: ['stepsData']
 }
@@ -25,11 +42,8 @@ export default {
 <template>
     <div class="svg-preview">
         <div class="preview" v-show="showCondition">
-            <object :data="this.stepsData[fileContent]" type="image/svg+xml">
-            </object>
-            <!-- USE IFRAME to disable id styles from this SVG being applied to other previews -->
-            <!-- <iframe class="preview-iframe" :srcdoc="previewPreCode + this.stepsData[fileContent]"
-                                    sandbox="allow-scripts"></iframe> -->
+            <object :data="getPreviewLink()" type="image/svg+xml" :v-show="showAsLink()"></object>
+            <div class="inlineSVG" v-show="showAsData()" v-html="this.previewCode + getPreviewData()"></div>
         </div>
     </div>
 </template>
@@ -38,6 +52,7 @@ export default {
 .svg-preview {
     text-align: center;
     margin: 10px auto 0px;
+    width: 100%;
 
     .preview-object {
         width: 100%;
@@ -58,6 +73,14 @@ export default {
     .preview {
         max-width: 300px;
         margin: 0px auto;
+
+        .inlineSVG {
+            width: 100%;
+
+            svg {
+                width: 100%;
+            }
+        }
     }
 }
 </style>

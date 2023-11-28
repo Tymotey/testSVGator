@@ -67,7 +67,8 @@ export default {
             <button class="apply-button" v-show="this.stepsData.newFile !== ''" @click="() => { applyAnimation() }"
                 title="Apply animation to new file">Apply animation!</button>
             <div id="result-wrapper">
-                <PreviewComponent :showCondition="this.stepsData.newFile !== ''" :fileContent="'newFile'" />
+                <PreviewComponent :showCondition="this.stepsData.newFile !== ''" :fileContent="'newFile'"
+                    :filePath="'newFilePath'" />
             </div>
         </div>
     </div>
