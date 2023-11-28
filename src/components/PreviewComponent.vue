@@ -22,6 +22,17 @@ export default {
         }
     },
     methods: {
+        getObjectData() {
+            if (this.fileContent !== '' && (this.stepsData[this.filePath] === undefined || this.stepsData[this.filePath] === '')) {
+                let svg = this.previewCode + this.stepsData[this.fileContent]
+                const blob = new Blob([svg], { type: 'image/svg+xml' });
+                const url = URL.createObjectURL(blob);
+
+                return url
+            } else {
+                return this.stepsData[this.filePath]
+            }
+        },
         getPreviewLink() {
             return this.stepsData[this.filePath] as string
         },
@@ -42,8 +53,7 @@ export default {
 <template>
     <div class="svg-preview">
         <div class="preview" v-show="showCondition">
-            <object :data="getPreviewLink()" type="image/svg+xml" :v-show="showAsLink()"></object>
-            <div class="inlineSVG" v-show="showAsData()" v-html="this.previewCode + getPreviewData()"></div>
+            <object :data="getObjectData()"></object>
         </div>
     </div>
 </template>
@@ -73,14 +83,6 @@ export default {
     .preview {
         max-width: 300px;
         margin: 0px auto;
-
-        .inlineSVG {
-            width: 100%;
-
-            svg {
-                width: 100%;
-            }
-        }
     }
 }
 </style>
