@@ -6,7 +6,7 @@
   "type": "module",
   "main": "server/index.js",
   "scripts": {
-    "docker:build": "docker build -t svgator/test . && docker login && docker push svgator/test",
+    "docker:build": "docker build -t svgator/test . && docker push svgator/test",
     "docker:start": "docker run -it -p 3000:3000 --rm --name test svgator/test",
     "dev:frontend": "vite",
     "dev:backend": "nodemon server/index.ts",
