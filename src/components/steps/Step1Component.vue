@@ -28,18 +28,23 @@ export default {
                 this.$emit('changeStep', 1, true)
             }
             else {
-                let contentFile = await readText(returnData.files[0])
-                this.stepsData.originalFile = contentFile
-                let result = extractSVGAnimation(contentFile)
+                if (returnData.files[0] !== undefined) {
+                    let contentFile = await readText(returnData.files[0])
+                    this.stepsData.originalFile = contentFile
+                    let result = extractSVGAnimation(contentFile)
 
-                if (result.error === false) {
-                    this.stepsData.animationData = result.data
-                    this.$emit('changeStep', 2)
+                    if (result.error === false) {
+                        this.stepsData.animationData = result.data
+                        this.$emit('changeStep', 2)
 
-                    this.$toast.success('File uploaded and data extracted')
+                        this.$toast.success('File uploaded and data extracted')
+                    }
+                    else {
+                        this.$toast.error(result.message || 'Error occured')
+                    }
                 }
                 else {
-                    this.$toast.error(result.message || 'Error occured')
+                    this.$toast.error('No file selected')
                 }
             }
         }

@@ -54,6 +54,9 @@ router
           const uploadPath = __dirname + path
 
           // there is a better way to create folders!
+          if (!fs.existsSync(__dirname + '/uploads')) {
+            fs.mkdirSync(__dirname + '/uploads')
+          }
           if (!fs.existsSync(__dirname + '/uploads/' + req.body.step)) {
             fs.mkdirSync(__dirname + '/uploads/' + req.body.step)
           }
