@@ -67,6 +67,9 @@ export default {
                             .then(res => {
                                 this.isUploading = false
                                 this.progress = false
+                                if (this.step === 'originalFile') {
+                                    this.stepsData.originalFilePath = res.data.data.path
+                                }
                                 console.log('File uploaded. Path:', res.data.data.path);
                                 console.log('Debug:', res);
                             })

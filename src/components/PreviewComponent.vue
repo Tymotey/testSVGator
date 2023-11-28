@@ -15,7 +15,7 @@ export default {
         },
         fileContent: {
             type: String,
-            default: 'originalFile'
+            default: 'originalFilePath'
         }
     },
     inject: ['stepsData']
@@ -25,9 +25,11 @@ export default {
 <template>
     <div class="svg-preview">
         <div class="preview" v-show="showCondition">
+            <object :data="this.stepsData[fileContent]" type="image/svg+xml">
+            </object>
             <!-- USE IFRAME to disable id styles from this SVG being applied to other previews -->
-            <iframe class="preview-iframe" :srcdoc="previewPreCode + this.stepsData[fileContent]"
-                sandbox="allow-scripts"></iframe>
+            <!-- <iframe class="preview-iframe" :srcdoc="previewPreCode + this.stepsData[fileContent]"
+                                    sandbox="allow-scripts"></iframe> -->
         </div>
     </div>
 </template>
@@ -36,6 +38,10 @@ export default {
 .svg-preview {
     text-align: center;
     margin: 10px auto 0px;
+
+    .preview-object {
+        width: 100%;
+    }
 
     .preview-iframe {
         border: 0px;
