@@ -1,3 +1,12 @@
+# Purpose of test:
+
+Create a VueJS form that will:
+- let the client upload and SVG(must work in offline mode too)
+- show the SVG and extract all animations(from css)
+- upload a new SVG(same structure with original, BUT no CSS)
+- add animations to second SVG
+- show the new, altered SVG
+
 ## Folder for test svg
 
 `test_files`
